@@ -1,0 +1,246 @@
+﻿<UserControl x:Class="EMS.MVVM.View.CurrentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EMS.MVVM.View"
+             xmlns:vm="clr-namespace:EMS.MVVM.ViewModel"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" 
+             d:DesignWidth="900"
+             Style="{StaticResource PageStyle}">
+
+    <UserControl.Resources>
+        <!-- Boolean to Visibility Converter -->
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+    </UserControl.Resources>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                  VerticalScrollBarVisibility="Auto">
+
+        <StackPanel Orientation="Horizontal">
+
+            <!--// Gauge Charts Area //-->
+
+            <Grid Margin="30,25,25,25">
+
+                <Grid.RowDefinitions>
+
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="Auto"/>
+
+                </Grid.ColumnDefinitions>
+
+                <Border Background="Black"
+                        Grid.RowSpan="4"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="-20"
+                        Opacity="0.5"
+                        CornerRadius="30"/>
+
+
+                <TextBlock Text="Current"
+                            Foreground="#DBDBDB"
+                            FontSize="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                           Grid.Row="0"
+                           FontWeight="Bold"/>
+
+                <lvc:Gauge Name="Current_L1_Gauge"
+                           Width="150"
+                           Height="150"
+                           From="{Binding CurrentMin}"
+                           To="{Binding CurrentMax}"
+                           Value="{Binding Current_L1}"
+                           FontSize="15"
+                           Foreground="#DBDBDB"
+                           GaugeActiveFill="{Binding CurrentStatusColor_L1}"
+                           ToolTip="L1"
+                           Grid.Row="1"/>
+
+                <lvc:Gauge Name="Current_L2_Gauge"
+                           Width="150"
+                           Height="150"
+                           From="{Binding CurrentMin}"
+                           To="{Binding CurrentMax}"
+                           Value="{Binding Current_L2}"
+                           FontSize="15"
+                           Foreground="#DBDBDB"
+                           GaugeActiveFill="{Binding CurrentStatusColor_L2}"
+                           ToolTip="L2"
+                           Grid.Row="2"/>
+
+                <lvc:Gauge Name="Current_L3_Gauge"
+                           Width="150"
+                           Height="150"
+                           From="{Binding CurrentMin}"
+                           To="{Binding CurrentMax}"
+                           Value="{Binding Current_L3}"
+                           FontSize="15"
+                           Foreground="#DBDBDB"
+                           GaugeActiveFill="{Binding CurrentStatusColor_L3}"
+                           ToolTip="L3"
+                           Grid.Row="3"/>
+
+            </Grid>
+
+            <!--// Graphs and Report Input Area //-->
+
+            <StackPanel Orientation="Vertical">
+
+                <!--// Functional Button Area //-->
+                
+                <Button Content="Plot"
+                        Command="{Binding PlotCurrentCommand}" 
+                        Style="{StaticResource Function}" 
+                        ToolTip="Plot Line chart over time"/>
+
+                <Button Content="Switch"
+                        Command="{Binding SwitchCurrentCommand}"
+                        Style="{StaticResource Function}"
+                        ToolTip="Switch between: Line, Bar, and Scatter Chart"/>
+
+                <Button Content="Stop"
+                        Command="{Binding StopPlottingCurrentCommand}"
+                        Style="{StaticResource Function}" 
+                        ToolTip="Stop plotting"/>
+
+                <Button Content="Report"
+                        Style="{StaticResource Function}" 
+                        Command="{Binding LoadReportCurrentCommand}"
+                        ToolTip="Generate a report from start date to end date"/>
+
+                <Button Content="Export"
+                        Style="{StaticResource Function}" 
+                        Command="{Binding ExportReportCurrentCommand}"
+                        Visibility="{Binding CurrentCanExport, Converter={StaticResource BoolToVisConverter}}"
+                        ToolTip="Export the current report to CSV"/>
+
+                <!--// Report Parameters Area //-->
+
+                <TextBlock Text="Start Date:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                <DatePicker x:Name="CurrentStartDate" 
+                            Style="{StaticResource DatePickerStyle}"
+                            SelectedDate="{Binding CurrentStartDate}"
+                            ToolTip="Enter start date for report"/>
+
+                <TextBlock Text="End Date:"
+                           Foreground="#DBDBDB"
+                           FontSize="15"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Margin="10,10,0,0" />
+
+                <DatePicker x:Name="CurrentEndDate" 
+                            Style="{StaticResource DatePickerStyle}"
+                            SelectedDate="{Binding CurrentEndDate}"
+                            ToolTip="Enter end date for report"/>
+
+                <TextBlock Text="Frequency:"
+                           Foreground="#DBDBDB"
+                           FontSize="15"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Margin="10,10,0,0" />
+
+                <ComboBox x:Name="CurrentFrequencyComboBox" 
+                          Width="150" 
+                          Height="40"
+                          Margin="10,5,0,0"
+                          HorizontalAlignment="Left"
+                          Style="{StaticResource ComboBoxStyle}"
+                          ItemsSource="{Binding Frequencies}"
+                          SelectedItem="{Binding CurrentFrequency}"
+                          ToolTip="Choose how often the data is tabulated for the report">
+
+                </ComboBox>
+
+            </StackPanel>
+
+            <!--// Graphs and Report Content Area //-->
+
+            <StackPanel>
+
+                <!--// Dynamic Graph Over Time Area //-->
+
+                <ContentControl Content="{Binding CurrentChart}"
+                                Width="1000"
+                                Height="225"
+                                Margin="20"
+                                Foreground="#DBDBDB"/>
+
+                <!--// Report Area //-->
+
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
+
+                    <DataGrid x:Name="CurrentDataGridDisplay"
+                              Height="225"
+                              Width="1000"
+                              Margin="20" 
+                              AutoGenerateColumns="True"
+                              Background="Transparent"
+                              Foreground="#DBDBDB"
+                              AlternatingRowBackground="Transparent"
+                              RowBackground="#4a4a4a "
+                              FontSize="15"
+                              VerticalAlignment="Center"
+                              ColumnWidth="*"
+                              ItemsSource="{Binding CurrentReadings}">
+
+                        <DataGrid.ColumnHeaderStyle>
+
+                            <Style TargetType="DataGridColumnHeader">
+
+                                <Setter Property="Background" Value="Black" />
+                                <Setter Property="Foreground" Value="#DBDBDB" />
+                                <Setter Property="FontWeight" Value="Bold" />
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                <Setter Property="Padding" Value="10" />
+
+                            </Style>
+
+                        </DataGrid.ColumnHeaderStyle>
+
+                        <DataGrid.Resources>
+
+                            <Style TargetType="DataGridCell">
+
+                                <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                                <Setter Property="Padding" Value="10" />
+
+                            </Style>
+
+                        </DataGrid.Resources>
+
+                    </DataGrid>
+
+                </ScrollViewer>
+
+            </StackPanel>
+
+        </StackPanel>
+
+
+    </ScrollViewer>
+
+
+
+</UserControl>

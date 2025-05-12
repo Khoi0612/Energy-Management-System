@@ -1,0 +1,974 @@
+﻿<UserControl x:Class="EMS.MVVM.View.PowerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EMS.MVVM.View"
+             xmlns:vm="clr-namespace:EMS.MVVM.ViewModel"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" 
+             d:DesignWidth="900"
+             Style="{StaticResource PageStyle}">
+
+    <UserControl.Resources>
+        <!-- Boolean to Visibility Converter -->
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Auto">
+
+        <StackPanel>
+
+            <!--// Active Power View //-->
+            
+            <Grid>
+
+                <Grid.RowDefinitions>
+
+                    <RowDefinition Height="Auto"/>
+
+                </Grid.RowDefinitions>
+
+                <Border Background="#ffeb3b"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        CornerRadius="20"
+                        Margin="-10"
+                        Width="750"
+                        Height="40"/>
+
+                <TextBlock Text="Active Power"
+                           Foreground="Black"
+                           FontSize="20"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           FontWeight="Bold"
+                           Margin="15"/>
+
+            </Grid>
+
+            <StackPanel Orientation="Horizontal">
+
+                <!--// Gauge Charts Area //-->
+
+                <Grid Margin="25">
+
+                    <Grid.RowDefinitions>
+
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+
+                        <ColumnDefinition Width="Auto"/>
+
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="Black"
+                            Grid.RowSpan="3"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Margin="-20"
+                            Opacity="0.5"
+                            CornerRadius="30"/>
+
+                    <lvc:Gauge Name="ActivePower_L1_Gauge"
+                               Width="150"
+                               Height="150"
+                               From="{Binding ActivePowerMin}"
+                               To="{Binding ActivePowerMax}"
+                               Value="{Binding ActivePower_L1}"
+                               FontSize="15"
+                               Foreground="#DBDBDB"
+                               GaugeActiveFill="{Binding ActivePowerStatusColor_L1}"
+                               ToolTip="L1"
+                               Grid.Row="0"/>
+
+                    <lvc:Gauge Name="ActivePower_L2_Gauge"
+                               Width="150"
+                               Height="150"
+                               From="{Binding ActivePowerMin}"
+                               To="{Binding ActivePowerMax}"
+                               Value="{Binding ActivePower_L2}"
+                               FontSize="15"
+                               Foreground="#DBDBDB"
+                               GaugeActiveFill="{Binding ActivePowerStatusColor_L2}"
+                               ToolTip="L2"
+                               Grid.Row="1"/>
+
+                    <lvc:Gauge Name="ActivePower_L3_Gauge"
+                               Width="150"
+                               Height="150"
+                               From="{Binding ActivePowerMin}"
+                               To="{Binding ActivePowerMax}"
+                               Value="{Binding ActivePower_L3}"
+                               FontSize="15"
+                               Foreground="#DBDBDB"
+                               GaugeActiveFill="{Binding ActivePowerStatusColor_L3}"
+                               ToolTip="L3"
+                               Grid.Row="2"/>
+
+                </Grid>
+
+                <!--// Graphs and Report Input Area //-->
+
+                <StackPanel Orientation="Vertical">
+
+                    <!--// Functional Button Area //-->
+                    
+                    <Button Content="Plot"
+                            Command="{Binding PlotActivePowerCommand}" 
+                            Style="{StaticResource Function}" 
+                            ToolTip="Plot Line chart over time"/>
+
+                    <Button Content="Switch"
+                            Command="{Binding SwitchActivePowerCommand}"
+                            Style="{StaticResource Function}" 
+                            ToolTip="Switch between: Line, Bar, and Scatter Chart"/>
+
+                    <Button Content="Stop"
+                            Command="{Binding StopPlottingActivePowerCommand}"
+                            Style="{StaticResource Function}" 
+                            ToolTip="Stop plotting"/>
+
+                    <Button Content="Report"
+                            Style="{StaticResource Function}"
+                            Command="{Binding LoadReportActivePowerCommand}" 
+                            ToolTip="Generate a report from start date to end date"/>
+
+                    <Button Content="Export"
+                            Style="{StaticResource Function}" 
+                            Command="{Binding ExportReportActivePowerCommand}"
+                            Visibility="{Binding ActivePowerCanExport, Converter={StaticResource BoolToVisConverter}}"
+                            ToolTip="Export the current report to CSV"/>
+
+                    <!--// Report Parameters Area //-->
+
+                    <TextBlock Text="Start Date:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <DatePicker x:Name="ActivePowerStartDate" 
+                                Style="{StaticResource DatePickerStyle}"
+                                SelectedDate="{Binding ActivePowerStartDate}"/>
+
+                    <TextBlock Text="End Date:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <DatePicker x:Name="ActivePowerEndDate" 
+                                Style="{StaticResource DatePickerStyle}"
+                                SelectedDate="{Binding ActivePowerEndDate}"/>
+
+                    <TextBlock Text="Frequency:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <ComboBox x:Name="ActivePowerFrequencyComboBox" 
+                              Width="150" 
+                              Height="40"
+                              Margin="10,5,0,0"
+                              HorizontalAlignment="Left"
+                              Style="{StaticResource ComboBoxStyle}"
+                              ItemsSource="{Binding Frequencies}"
+                              SelectedItem="{Binding ActivePowerFrequency}">
+
+                    </ComboBox>
+
+
+                </StackPanel>
+
+                <!--// Graphs and Report Content Area //-->
+
+                <StackPanel>
+
+                    <!--// Dynamic Graph Over Time Area //-->
+
+                    <ContentControl Content="{Binding ActivePowerChart}"
+                            Width="1000"
+                            Height="225"
+                            Margin="30"
+                            Foreground="White"/>
+
+                    <!--// Report Area //-->
+
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
+
+                        <DataGrid x:Name="ActivePowerDataGridDisplay"
+                                  Height="225"
+                                  Width="1000"
+                                  Margin="20" 
+                                  AutoGenerateColumns="True"
+                                  Background="Transparent"
+                                  Foreground="#DBDBDB"
+                                  AlternatingRowBackground="Transparent"
+                                  RowBackground="#4a4a4a "
+                                  FontSize="15"
+                                  VerticalAlignment="Center"
+                                  ColumnWidth="*"
+                                  ItemsSource="{Binding ActivePowerReadings}">
+
+                            <DataGrid.ColumnHeaderStyle>
+
+                                <Style TargetType="DataGridColumnHeader">
+
+                                    <Setter Property="Background" Value="Black" />
+                                    <Setter Property="Foreground" Value="#DBDBDB" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    <Setter Property="Padding" Value="10" />
+
+                                </Style>
+
+                            </DataGrid.ColumnHeaderStyle>
+
+                            <DataGrid.Resources>
+
+                                <Style TargetType="DataGridCell">
+
+                                    <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                                    <Setter Property="Padding" Value="10" />
+
+                                </Style>
+
+                            </DataGrid.Resources>
+
+                        </DataGrid>
+
+                    </ScrollViewer>
+
+                </StackPanel>
+
+            </StackPanel>
+
+            <!--// Reactive Power View //-->
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+
+                    <RowDefinition Height="Auto"/>
+
+                </Grid.RowDefinitions>
+
+                <Border Background="#ffeb3b"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        CornerRadius="20"
+                        Margin="-10"
+                        Width="750"
+                        Height="40"/>
+
+                <TextBlock Text="Reactive Power"
+                           Foreground="Black"
+                           FontSize="20"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           FontWeight="Bold"
+                           Margin="15"/>
+
+            </Grid>
+
+            <StackPanel Orientation="Horizontal">
+
+                <!--// Gauge Charts Area //-->
+
+                <Grid Margin="25">
+
+                    <Grid.RowDefinitions>
+
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+
+                        <ColumnDefinition Width="Auto"/>
+
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="Black"
+                        Grid.RowSpan="3"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="-20"
+                        Opacity="0.5"
+                        CornerRadius="30"/>
+
+                    <lvc:Gauge Name="ReactivePower_L1_Gauge"
+                                   Width="150"
+                                   Height="150"
+                                   From="{Binding ReactivePowerMin}"
+                                   To="{Binding ReactivePowerMax}"
+                                   Value="{Binding ReactivePower_L1}"
+                                   FontSize="15"
+                                   Foreground="#DBDBDB"
+                                   GaugeActiveFill="{Binding ReactivePowerStatusColor_L1}"
+                               ToolTip="1"
+                               Grid.Row="0"/>
+
+                    <lvc:Gauge Name="ReactivePower_L2_Gauge"
+                                   Width="150"
+                                   Height="150"
+                                   From="{Binding ReactivePowerMin}"
+                                   To="{Binding ReactivePowerMax}"
+                                   Value="{Binding ReactivePower_L2}"
+                                   FontSize="15"
+                                   Foreground="#DBDBDB"
+                                   GaugeActiveFill="{Binding ReactivePowerStatusColor_L2}"
+                           ToolTip="L2"
+                           Grid.Row="1"/>
+
+                    <lvc:Gauge Name="ReactivePower_L3_Gauge"
+                                   Width="150"
+                                   Height="150"
+                                   From="{Binding ReactivePowerMin}"
+                                   To="{Binding ReactivePowerMax}"
+                                   Value="{Binding ReactivePower_L3}"
+                                   FontSize="15"
+                                   Foreground="#DBDBDB"
+                                   GaugeActiveFill="{Binding ReactivePowerStatusColor_L3}"
+                           ToolTip="L3"
+                           Grid.Row="2"/>
+
+                </Grid>
+
+                <!--// Graphs and Report Input Area //-->
+
+                <StackPanel Orientation="Vertical">
+
+                    <!--// Functional Button Area //-->
+
+                    <Button Content="Plot"
+                            Command="{Binding PlotReactivePowerCommand}" 
+                            Style="{StaticResource Function}"
+                            ToolTip="Plot Line chart over time"/>
+
+                    <Button Content="Switch"
+                            Command="{Binding SwitchReactivePowerCommand}"
+                            Style="{StaticResource Function}" 
+                            ToolTip="Switch between: Line, Bar, and Scatter Chart"/>
+
+                    <Button Content="Stop"
+                            Command="{Binding StopPlottingReactivePowerCommand}"
+                            Style="{StaticResource Function}" 
+                            ToolTip="Stop plotting"/>
+
+                    <Button Content="Report"
+                            Style="{StaticResource Function}"
+                            Command="{Binding LoadReportReactivePowerCommand}" 
+                            ToolTip="Generate a report from start date to end date"/>
+
+                    <Button Content="Export"
+                            Style="{StaticResource Function}" 
+                            Command="{Binding ExportReportReactivePowerCommand}"
+                            Visibility="{Binding ReactivePowerCanExport, Converter={StaticResource BoolToVisConverter}}"
+                            ToolTip="Export the current report to CSV"/>
+
+                    <!--// Report Parameters Area //-->
+
+                    <TextBlock Text="Start Date:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <DatePicker x:Name="ReactivePowerStartDate" 
+                                Style="{StaticResource DatePickerStyle}"
+                                SelectedDate="{Binding ReactivePowerStartDate}"
+                                ToolTip="Enter start date for report"/>
+
+                    <TextBlock Text="End Date:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <DatePicker x:Name="ReactivePowerEndDate" 
+                                Style="{StaticResource DatePickerStyle}"
+                                SelectedDate="{Binding ReactivePowerEndDate}"
+                                ToolTip="Enter end date for report"/>
+
+                    <TextBlock Text="Frequency:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <ComboBox x:Name="ReactivePowerFrequencyComboBox" 
+                              Width="150" 
+                              Height="40"
+                              Margin="10,5,0,0"
+                              HorizontalAlignment="Left"
+                              Style="{StaticResource ComboBoxStyle}"
+                              ItemsSource="{Binding Frequencies}"
+                              SelectedItem="{Binding ReactivePowerFrequency}"
+                              ToolTip="Choose how often the data is tabulated for the report">
+
+                    </ComboBox>
+
+                </StackPanel>
+
+                <!--// Graphs and Report Content Area //-->
+
+                <StackPanel>
+
+                    <!--// Dynamic Graph Over Time Area //-->
+
+                    <ContentControl Content="{Binding ReactivePowerChart}"
+                            Width="1000"
+                            Height="225"
+                            Margin="30"
+                            Foreground="White"/>
+
+                    <!--// Report Area //-->
+
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
+
+                        <DataGrid x:Name="ReactivePowerDataGridDisplay"
+                                  Height="225"
+                                  Width="1000"
+                                  Margin="20" 
+                                  AutoGenerateColumns="True"
+                                  Background="Transparent"
+                                  Foreground="#DBDBDB"
+                                  AlternatingRowBackground="Transparent"
+                                  RowBackground="#4a4a4a "
+                                  FontSize="15"
+                                  VerticalAlignment="Center"
+                                  ColumnWidth="*"
+                                  ItemsSource="{Binding ReactivePowerReadings}">
+
+                            <DataGrid.ColumnHeaderStyle>
+
+                                <Style TargetType="DataGridColumnHeader">
+
+                                    <Setter Property="Background" Value="Black" />
+                                    <Setter Property="Foreground" Value="#DBDBDB" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    <Setter Property="Padding" Value="10" />
+
+                                </Style>
+
+                            </DataGrid.ColumnHeaderStyle>
+
+                            <DataGrid.Resources>
+
+                                <Style TargetType="DataGridCell">
+
+                                    <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                                    <Setter Property="Padding" Value="10" />
+
+                                </Style>
+
+                            </DataGrid.Resources>
+
+                        </DataGrid>
+
+                    </ScrollViewer>
+
+                </StackPanel>
+
+            </StackPanel>
+
+            <!--// Apparent Power View //-->
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+
+                    <RowDefinition Height="Auto"/>
+
+                </Grid.RowDefinitions>
+
+                <Border Background="#ffeb3b"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        CornerRadius="20"
+                        Margin="-10"
+                        Width="750"
+                        Height="40"/>
+
+                <TextBlock Text="Apparent Power"
+                            Foreground="Black"
+                            FontSize="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                           FontWeight="Bold"
+                           Margin="15"/>
+
+            </Grid>
+
+            <StackPanel Orientation="Horizontal">
+
+                <!--// Gauge Charts Area //-->
+
+                <Grid Margin="25">
+
+                    <Grid.RowDefinitions>
+
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+
+                        <ColumnDefinition Width="Auto"/>
+
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="Black"
+                        Grid.RowSpan="3"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="-20"
+                        Opacity="0.5"
+                        CornerRadius="30"/>
+
+                    <lvc:Gauge Name="ApparentPower_L1_Gauge"
+                                   Width="150"
+                                   Height="150"
+                                   From="{Binding ApparentPowerMin}"
+                                   To="{Binding ApparentPowerMax}"
+                                   Value="{Binding ApparentPower_L1}"
+                                   FontSize="15"
+                                   Foreground="#DBDBDB"
+                                   GaugeActiveFill="{Binding ApparentPowerStatusColor_L1}"
+                           ToolTip="L1"
+                           Grid.Row="0"/>
+
+                    <lvc:Gauge Name="ApparentPower_L2_Gauge"
+                                   Width="150"
+                                   Height="150"
+                                   From="{Binding ApparentPowerMin}"
+                                   To="{Binding ApparentPowerMax}"
+                                   Value="{Binding ApparentPower_L2}"
+                                   FontSize="15"
+                                   Foreground="#DBDBDB"
+                                   GaugeActiveFill="{Binding ApparentPowerStatusColor_L2}"
+                           ToolTip="L2"
+                           Grid.Row="1"/>
+
+                    <lvc:Gauge Name="ApparentPower_L3_Gauge"
+                                   Width="150"
+                                   Height="150"
+                                   From="{Binding ApparentPowerMin}"
+                                   To="{Binding ApparentPowerMax}"
+                                   Value="{Binding ApparentPower_L3}"
+                                   FontSize="15"
+                                   Foreground="#DBDBDB"
+                                   GaugeActiveFill="{Binding ApparentPowerStatusColor_L3}"
+                           ToolTip="L3"
+                           Grid.Row="2"/>
+
+                </Grid>
+
+                <!--// Graphs and Report Input Area //-->
+
+                <StackPanel Orientation="Vertical">
+
+                    <!--// Functional Button Area //-->
+
+                    <Button Content="Plot"
+                            Command="{Binding PlotApparentPowerCommand}" 
+                            Style="{StaticResource Function}" 
+                            ToolTip="Plot Line chart over time"/>
+
+                    <Button Content="Switch"
+                            Command="{Binding SwitchApparentPowerCommand}"
+                            Style="{StaticResource Function}" 
+                            ToolTip="Switch between: Line, Bar, and Scatter Chart"/>
+
+                    <Button Content="Stop"
+                            Command="{Binding StopPlottingApparentPowerCommand}"
+                            Style="{StaticResource Function}" 
+                            ToolTip="Stop plotting"/>
+
+                    <Button Content="Report"
+                            Style="{StaticResource Function}"
+                            Command="{Binding LoadReportApparentPowerCommand}" 
+                            ToolTip="Generate a report from start date to end date"/>
+
+                    <Button Content="Export"
+                            Style="{StaticResource Function}" 
+                            Command="{Binding ExportReportApparentPowerCommand}"
+                            Visibility="{Binding ApparentPowerCanExport, Converter={StaticResource BoolToVisConverter}}"
+                            ToolTip="Export the current report to CSV"/>
+
+                    <!--// Report Parameters Area //-->
+
+                    <TextBlock Text="Start Date:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <DatePicker x:Name="ApparentPowerStartDate" 
+                                Style="{StaticResource DatePickerStyle}"
+                                SelectedDate="{Binding ApparentPowerStartDate}"
+                                ToolTip="Enter start date for report"/>
+
+                    <TextBlock Text="End Date:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <DatePicker x:Name="ApparentPowerEndDate" 
+                                Style="{StaticResource DatePickerStyle}"
+                                SelectedDate="{Binding ApparentPowerEndDate}"
+                                ToolTip="Enter end date for report"/>
+
+                    <TextBlock Text="Frequency:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <ComboBox x:Name="ApparentPowerFrequencyComboBox" 
+                              Width="150" 
+                              Height="40"
+                              Margin="10,5,0,0"
+                              HorizontalAlignment="Left"
+                              Style="{StaticResource ComboBoxStyle}"
+                              ItemsSource="{Binding Frequencies}"
+                              SelectedItem="{Binding ApparentPowerFrequency}"
+                              ToolTip="Choose how often the data is tabulated for the report">
+
+                    </ComboBox>
+
+                </StackPanel>
+
+                <!--// Graphs and Report Content Area //-->
+
+                <StackPanel>
+
+                    <!--// Dynamic Graph Over Time Area //-->
+
+                    <ContentControl Content="{Binding ApparentPowerChart}"
+                            Width="1000"
+                            Height="225"
+                            Margin="30"
+                            Foreground="White"/>
+
+                    <!--// Report Area //-->
+
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
+
+                        <DataGrid x:Name="ApparentPowerDataGridDisplay"
+                                  Height="225"
+                                  Width="1000"
+                                  Margin="20" 
+                                  AutoGenerateColumns="True"
+                                  Background="Transparent"
+                                  Foreground="#DBDBDB"
+                                  AlternatingRowBackground="Transparent"
+                                  RowBackground="#4a4a4a "
+                                  FontSize="15"
+                                  VerticalAlignment="Center"
+                                  ColumnWidth="*"
+                                  ItemsSource="{Binding ApparentPowerReadings}">
+
+                            <DataGrid.ColumnHeaderStyle>
+
+                                <Style TargetType="DataGridColumnHeader">
+
+                                    <Setter Property="Background" Value="Black" />
+                                    <Setter Property="Foreground" Value="#DBDBDB" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    <Setter Property="Padding" Value="10" />
+
+                                </Style>
+
+                            </DataGrid.ColumnHeaderStyle>
+
+                            <DataGrid.Resources>
+
+                                <Style TargetType="DataGridCell">
+
+                                    <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                                    <Setter Property="Padding" Value="10" />
+
+                                </Style>
+
+                            </DataGrid.Resources>
+
+                        </DataGrid>
+
+                    </ScrollViewer>
+
+                </StackPanel>
+
+            </StackPanel>
+
+            <!--// Power Factor View //-->
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+
+                    <RowDefinition Height="Auto"/>
+
+                </Grid.RowDefinitions>
+
+                <Border Background="#ffeb3b"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        CornerRadius="20"
+                        Margin="-10"
+                        Width="750"
+                        Height="40"/>
+
+                <TextBlock Text="Power Factor"
+                           Foreground="Black"
+                           FontSize="20"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           FontWeight="Bold"
+                           Margin="15"/>
+
+            </Grid>
+
+            <StackPanel Orientation="Horizontal">
+
+                <!--// Gauge Charts Area //-->
+
+                <Grid Margin="25">
+
+                    <Grid.RowDefinitions>
+
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+
+                        <ColumnDefinition Width="Auto"/>
+
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="Black"
+                            Grid.RowSpan="4"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Margin="-20"
+                            Opacity="0.5"
+                            CornerRadius="30"/>
+
+                    <lvc:Gauge Name="PowerFactor_L1_Gauge"
+                               Width="150"
+                               Height="150"
+                               From="{Binding PowerFactorMin}"
+                               To="{Binding PowerFactorMax}"
+                               Value="{Binding PowerFactor_L1}"
+                               FontSize="15"
+                               Foreground="#DBDBDB"
+                               GaugeActiveFill="{Binding PowerFactorStatusColor_L1}"
+                               ToolTip="L1"
+                               Grid.Row="0"/>
+
+                    <lvc:Gauge Name="PowerFactor_L2_Gauge"
+                               Width="150"
+                               Height="150"
+                               From="{Binding PowerFactorMin}"
+                               To="{Binding PowerFactorMax}"
+                               Value="{Binding PowerFactor_L2}"
+                               FontSize="15"
+                               Foreground="#DBDBDB"
+                               GaugeActiveFill="{Binding PowerFactorStatusColor_L2}"
+                               ToolTip="L2"
+                               Grid.Row="1"/>
+
+                    <lvc:Gauge Name="PowerFactor_L3_Gauge"
+                               Width="150"
+                               Height="150"
+                               From="{Binding PowerFactorMin}"
+                               To="{Binding PowerFactorMax}"
+                               Value="{Binding PowerFactor_L3}"
+                               FontSize="15"
+                               Foreground="#DBDBDB"
+                               GaugeActiveFill="{Binding PowerFactorStatusColor_L3}"
+                               ToolTip="L3"
+                               Grid.Row="2"/>
+
+                </Grid>
+
+                <!--// Graphs and Report Input Area //-->
+
+                <StackPanel Orientation="Vertical">
+
+                    <!--// Functional Button Area //-->
+
+                    <Button Content="Plot"
+                            Command="{Binding PlotPowerFactorCommand}" 
+                            Style="{StaticResource Function}" 
+                            ToolTip="Plot Line chart over time"/>
+
+                    <Button Content="Switch"
+                            Command="{Binding SwitchPowerFactorCommand}"
+                            Style="{StaticResource Function}" 
+                            ToolTip="Switch between: Line, Bar, and Scatter Chart"/>
+
+                    <Button Content="Stop"
+                            Command="{Binding StopPlottingPowerFactorCommand}"
+                            Style="{StaticResource Function}" 
+                            ToolTip="Stop plotting"/>
+
+                    <Button Content="Report"
+                            Style="{StaticResource Function}"
+                            Command="{Binding LoadReportPowerFactorCommand}" 
+                            ToolTip="Generate a report from start date to end date"/>
+
+                    <Button Content="Export"
+                            Style="{StaticResource Function}" 
+                            Command="{Binding ExportReportPowerFactorCommand}"
+                            Visibility="{Binding PowerFactorCanExport, Converter={StaticResource BoolToVisConverter}}"
+                            ToolTip="Export the current report to CSV"/>
+
+                    <!--// Report Parameters Area //-->
+
+                    <TextBlock Text="Start Date:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <DatePicker x:Name="PowerFactorStartDate" 
+                                Style="{StaticResource DatePickerStyle}"
+                                SelectedDate="{Binding PowerFactorStartDate}"
+                                ToolTip="Enter start date for report"/>
+
+                    <TextBlock Text="End Date:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <DatePicker x:Name="PowerFactorEndDate" 
+                                Style="{StaticResource DatePickerStyle}"
+                                SelectedDate="{Binding PowerFactorEndDate}"
+                                ToolTip="Enter end date for report"/>
+
+                    <TextBlock Text="Frequency:"
+                               Foreground="#DBDBDB"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="10,10,0,0" />
+
+                    <ComboBox x:Name="PowerFactorFrequencyComboBox" 
+                              Width="150" 
+                              Height="40"
+                              Margin="10,5,0,0"
+                              HorizontalAlignment="Left"
+                              Style="{StaticResource ComboBoxStyle}"
+                              ItemsSource="{Binding Frequencies}"
+                              SelectedItem="{Binding PowerFactorFrequency}"
+                              ToolTip="Choose how often the data is tabulated for the report">
+
+                    </ComboBox>
+
+                </StackPanel>
+
+                <!--// Graphs and Report Content Area //-->
+
+                <StackPanel>
+
+                    <!--// Dynamic Graph Over Time Area //-->
+
+                    <ContentControl Content="{Binding PowerFactorChart}"
+                            Width="1000"
+                            Height="225"
+                            Margin="30"
+                            Foreground="White"/>
+
+                    <!--// Report Area //-->
+
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
+
+                        <DataGrid x:Name="PowerFactorDataGridDisplay"
+                                  Height="225"
+                                  Width="1000"
+                                  Margin="20" 
+                                  AutoGenerateColumns="True"
+                                  Background="Transparent"
+                                  Foreground="#DBDBDB"
+                                  AlternatingRowBackground="Transparent"
+                                  RowBackground="#4a4a4a "
+                                  FontSize="15"
+                                  VerticalAlignment="Center"
+                                  ColumnWidth="*"
+                                  ItemsSource="{Binding PowerFactorReadings}">
+
+                            <DataGrid.ColumnHeaderStyle>
+
+                                <Style TargetType="DataGridColumnHeader">
+
+                                    <Setter Property="Background" Value="Black" />
+                                    <Setter Property="Foreground" Value="#DBDBDB" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    <Setter Property="Padding" Value="10" />
+
+                                </Style>
+
+                            </DataGrid.ColumnHeaderStyle>
+
+                            <DataGrid.Resources>
+
+                                <Style TargetType="DataGridCell">
+
+                                    <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                                    <Setter Property="Padding" Value="10" />
+
+                                </Style>
+
+                            </DataGrid.Resources>
+
+                        </DataGrid>
+
+                    </ScrollViewer>
+
+                </StackPanel>
+
+            </StackPanel>
+
+        </StackPanel>
+
+    </ScrollViewer>
+    
+</UserControl>

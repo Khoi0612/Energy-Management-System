@@ -1,0 +1,188 @@
+﻿<Window x:Class="EMS.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EMS"
+        xmlns:vm="clr-namespace:EMS.MVVM.ViewModel"
+        xmlns:view="clr-namespace:EMS.MVVM.View"
+        xmlns:core="clr-namespace:EMS.Core"
+        mc:Ignorable="d"
+        Title="MainWindow" 
+        Height="750" 
+        Width="1000"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        Background="Transparent"
+        MouseDown="WindowMouseDown">
+
+
+    <Window.DataContext>
+
+        <vm:NavigateVM />
+
+    </Window.DataContext>
+
+    <Grid>
+
+        <!--// Window Border //-->
+
+        <Border Background="#192033"/>
+
+        <Grid x:Name="BaseGrid">
+
+            <!--// Base Grid //-->
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100" x:Name="NavigationColumn"/>
+                <ColumnDefinition Width="*" x:Name="ContentColumn"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" x:Name="LogoRow"/>
+                <RowDefinition Height="*" x:Name="ContentRow"/>
+            </Grid.RowDefinitions>
+
+            <!--// Logo //-->
+
+            <TextBlock Text="EMS"
+                       FontSize="30"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Foreground="White"
+                       Style="{StaticResource TextStyle}">
+
+            </TextBlock>
+
+            <!--// Navigation Panel //-->
+
+            <Grid HorizontalAlignment="Left"
+                  Width="100"
+                  Grid.Column="0"
+                  Grid.Row="1">
+
+                <Border Background="#1e2330"
+                        CornerRadius="20,0,0,20"/>
+
+                <StackPanel Height="Auto"
+                            Width="100"
+                            VerticalAlignment="Center">
+
+                    <!--// Buttons //-->
+
+                    <RadioButton Style="{StaticResource ButtonStyle}"
+                                 Command="{Binding MainCommand}"
+                                 IsChecked="True">
+
+                        <Grid>
+
+                            <TextBlock Text="Main"
+                                       Style="{StaticResource TextStyle}" />
+
+                        </Grid>
+
+                    </RadioButton>
+
+                    <RadioButton Style="{StaticResource ButtonStyle}"
+                                 Command="{Binding VoltageCommand}"
+                                 IsChecked="False">
+
+                        <Grid>
+
+                            <TextBlock Text="Voltage"
+                                       Style="{StaticResource TextStyle}" />
+
+                        </Grid>
+
+                    </RadioButton>
+
+                    <RadioButton Style="{StaticResource ButtonStyle}"
+                                 Command="{Binding CurrentCommand}"
+                                 IsChecked="False">
+
+                        <Grid>
+
+                            <TextBlock Text="Current"
+                                       Style="{StaticResource TextStyle}" />
+
+                        </Grid>
+
+                    </RadioButton>
+
+                    <RadioButton Style="{StaticResource ButtonStyle}"
+                                 Command="{Binding PowerCommand}"
+                                 IsChecked="False">
+
+                        <Grid>
+
+                            <TextBlock Text="Power"
+                                       Style="{StaticResource TextStyle}" />
+
+                        </Grid>
+
+                    </RadioButton>
+
+                    <RadioButton Style="{StaticResource ButtonStyle}"
+                                 Command="{Binding SettingCommand}"
+                                 IsChecked="False">
+
+                        <Grid>
+
+                            <TextBlock Text="Setting"
+                                       Style="{StaticResource TextStyle}" />
+
+                        </Grid>
+
+                    </RadioButton>
+
+                </StackPanel>
+
+            </Grid>
+
+            <!--// Main Content //-->
+
+            <StackPanel Orientation="Horizontal"
+                            Grid.Column="1"
+                            Grid.Row="0">
+
+                <TextBlock Text="Please enter slave ID:"
+                               Foreground="#DBDBDB"
+                               FontSize="20"
+                               VerticalAlignment="Top"
+                               Margin="50,10,10,0"
+                               Style="{StaticResource TextStyle}"/>
+
+                <view:SlaveIdTextBox/>
+
+            </StackPanel>
+
+            <ContentControl x:Name="Content"
+                                    Content="{Binding CurrentView}"
+                                    Grid.Column="1"
+                                    Grid.Row="1"
+                            VerticalAlignment="Stretch"/>
+
+            <!--// Close Button //-->
+
+            <Button x:Name="CloseApp"
+                    Style="{StaticResource ExitApp}"
+                    Click="CloseAppClick" Grid.Column="1"/>
+
+            <!--// Maximize Button //-->
+
+            <Button x:Name="MaximiseApp"
+                    Style="{StaticResource MaximizeApp}"
+                    Click="MaximiseAppClick" Grid.Column="1"/>
+
+            <!--// Minimize Button //-->
+
+            <Button x:Name="MinimizeApp"
+                    Style="{StaticResource MinimizeApp}"
+                    Click="MinimizeAppClick" Grid.Column="1"/>
+
+        </Grid>
+
+    </Grid>
+
+</Window>

@@ -1,0 +1,47 @@
+﻿<Application x:Class="EMS.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:EMS"
+             xmlns:viewModel="clr-namespace:EMS.MVVM.ViewModel"
+             xmlns:view="clr-namespace:EMS.MVVM.View"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/Button.xaml"/>
+                <ResourceDictionary Source="Styles/Page.xaml"/>
+                <ResourceDictionary Source="Styles/Text.xaml"/>
+                <ResourceDictionary Source="Styles/TextBox.xaml"/>
+                <ResourceDictionary Source="Styles/ComboBox.xaml"/>
+                <ResourceDictionary Source="Styles/ComboBoxItems.xaml"/>
+                <ResourceDictionary Source="Styles/DatePicker.xaml"/>
+                <ResourceDictionary Source="Styles/ScrollBar.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type viewModel:MainVM}">
+                <view:MainView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:VoltageVM}">
+                <view:VoltageView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:CurrentVM}">
+                <view:CurrentView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:PowerVM}">
+                <view:PowerView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:MosbusMasterVM}">
+                <view:SlaveIdTextBox/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:SettingsVM}">
+                <view:SettingView/>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
